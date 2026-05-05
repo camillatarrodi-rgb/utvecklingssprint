@@ -3,13 +3,13 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Designteknologier - Utvecklingssprintar vt 2026</title>
+  <title>Temaval och kompetenser</title>
   <style>
     :root {
       --bg: #f6f4ef;
       --card: rgba(255,255,255,0.88);
       --text: #1f2933;
-      --muted: #667085;
+      --muted: #6b7280; /* grå text */
       --border: rgba(255,255,255,0.45);
       --pink-bg: #fde7f1;
       --pink-text: #c21872;
@@ -112,19 +112,17 @@
       color: var(--orange-text);
     }
 
-    .theme-card h3, .skills-panel h2 {
-      margin: 0 0 8px;
-      font-size: 1.18rem;
-    }
+    .theme-card h3 { margin: 0 0 6px; font-size: 1.15rem; }
 
-    .theme-card p, .skills-panel p {
-      margin: 0 0 14px;
+    /* NY: förklarande undertext */
+    .theme-subtitle {
+      font-size: 0.85rem;
       color: var(--muted);
-      font-size: 0.95rem;
+      margin-bottom: 10px;
     }
 
-    .theme-card.early p { color: #9b3c68; }
-    .theme-card.reuse p { color: #9a5400; }
+    .theme-card.early .theme-subtitle { color: #8a4b6b; }
+    .theme-card.reuse .theme-subtitle { color: #8a5b00; }
 
     label {
       display: block;
@@ -141,7 +139,6 @@
       border-radius: 12px;
       font: inherit;
       background: rgba(255,255,255,0.86);
-      color: var(--text);
     }
 
     button {
@@ -182,56 +179,30 @@
       padding: 12px;
       background: rgba(255,255,255,0.66);
       min-height: 92px;
-      transition: 0.15s ease;
-    }
-
-    .person.drag-over {
-      outline: 3px solid rgba(47,111,94,0.28);
-      transform: scale(1.01);
     }
 
     .person-top {
       display: flex;
       justify-content: space-between;
       gap: 10px;
-      align-items: start;
     }
 
     .person-name { font-weight: 850; }
-    .person-company { color: rgba(0,0,0,0.62); font-size: 0.9rem; }
+    .person-company { color: rgba(0,0,0,0.6); font-size: 0.9rem; }
 
     .person-skills {
       display: flex;
       flex-wrap: wrap;
       gap: 6px;
       margin-top: 10px;
-      min-height: 28px;
     }
 
     .assigned-skill {
-      display: inline-flex;
-      gap: 5px;
-      align-items: center;
       border-radius: 999px;
       background: #fff;
-      color: var(--accent);
-      padding: 5px 8px;
-      font-size: 0.82rem;
-      font-weight: 750;
+      padding: 4px 8px;
+      font-size: 0.8rem;
       border: 1px solid rgba(0,0,0,0.12);
-    }
-
-    .assigned-skill button {
-      padding: 0 3px;
-      background: transparent;
-      color: inherit;
-      font-weight: 900;
-    }
-
-    .empty-hint {
-      color: rgba(0,0,0,0.58);
-      font-size: 0.86rem;
-      margin-top: 8px;
     }
 
     .skills-panel {
@@ -240,378 +211,117 @@
     }
 
     .skill-group { margin-top: 18px; }
-
-    .skill-group h3 {
-      margin: 0 0 9px;
-      color: var(--accent);
-      font-size: 0.98rem;
-    }
-
-    .skill-tags {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-    }
+    .skill-tags { display: flex; flex-wrap: wrap; gap: 8px; }
 
     .skill-tag {
-      display: inline-flex;
-      align-items: center;
       border: 1px solid rgba(0,0,0,0.14);
       border-radius: 999px;
       background: #fff;
-      padding: 8px 10px;
-      font-size: 0.9rem;
+      padding: 7px 10px;
+      font-size: 0.85rem;
       cursor: grab;
-      user-select: none;
-    }
-
-    .skill-tag:active { cursor: grabbing; }
-
-    .other-row {
-      margin-top: 12px;
-      display: grid;
-      gap: 8px;
-    }
-
-    .add-other, .print-btn {
-      background: #ebe8e1;
-      color: var(--text);
-    }
-
-    .print-btn {
-      margin-top: 20px;
-      width: 100%;
     }
 
     @media (max-width: 940px) {
       .layout { grid-template-columns: 1fr; }
-      .skills-panel { position: static; }
-    }
-
-    @media print {
-      body { background: #fff; }
-      header { color: #111; text-shadow: none; }
-      .skills-panel, .save-btn, .remove-btn, .assigned-skill button { display: none; }
-      .layout { display: block; }
-      .theme-card, .category-title { break-inside: avoid; box-shadow: none; margin-bottom: 16px; }
     }
   </style>
 </head>
 <body>
   <header>
-    <h1>Designteknologier - Utvecklingssprintar vt 2026</h1>
-    <p class="intro">Anmäl dig till ett tema och dra sedan kompetenstaggar till ditt namn, så att gruppen ser vem som kan bidra med vad.</p>
+    <h1>Välj tema och kompetenser</h1>
+    <p class="intro">Anmäl dig till ett tema och dra sedan kompetenser till ditt namn.</p>
   </header>
 
   <main>
     <div class="layout">
-      <section id="theme-area" aria-label="Teman"></section>
+      <section id="theme-area"></section>
 
-      <aside class="skills-panel" aria-label="Kompetenser">
-        <h2>Kompetenstaggar</h2>
-        <p>Dra en tagg till en person. Du kan också klicka på en tagg och sedan klicka på en person.</p>
-
+      <aside class="skills-panel">
+        <h2>Kompetenser</h2>
         <div class="skill-group">
-          <h3>Kompetenser</h3>
           <div class="skill-tags" id="competence-skills"></div>
         </div>
-
-        <div class="skill-group">
-          <h3>Designteknologier</h3>
-          <div class="skill-tags" id="design-tech-skills"></div>
-        </div>
-
-        <div class="skill-group">
-          <h3>Annan kompetens eller programvara</h3>
-          <div class="other-row">
-            <input id="other-skill" type="text" placeholder="Skriv egen tagg" />
-            <button class="add-other" type="button" onclick="addOtherSkill()">Lägg till tagg</button>
-          </div>
-        </div>
-
-        <button class="print-btn" type="button" onclick="window.print()">Skriv ut / spara som PDF</button>
       </aside>
     </div>
   </main>
 
-  <script>
-    const categories = [
+<script>
+const categories = [
+  {
+    title: "Tidiga skeden",
+    className: "early",
+    themes: [
       {
-        title: "Tidiga skeden",
-        className: "early",
-        themes: [
-          "AI-agenter för automatisk inhämtning av data",
-          "Automatiserad granskning av lagar, regler och styrdokument",
-          "Tidig fastighetsekonomisk jämförelse"
-        ]
+        title: "AI agenter för automatisk inhämtning av data",
+        desc: "Hur kan vi med hjälp av AI agenter på ett effektivt sätt samla in underlag såsom DP-karta, fastighetsvärden över tid, buller, luftkvalitet, trafikflöden osv..."
       },
       {
-        title: "Återbruk",
-        className: "reuse",
-        themes: [
-          "Parallell design med och utan återbruk",
-          "Behålla flexibilitet genom designprocess och projektering",
-          "Matchning mellan design och tillgängligt återbruksmaterial"
-        ]
+        title: "Automatiserad granskning av lagar, regler och styrdokument",
+        desc: "Hur kan vi automatisera granskning av handlingar i tidiga skeden?"
+      },
+      {
+        title: "Tidig fastighetsekonomisk jämförelse",
+        desc: "Hur kan vi uppskatta och jämföra fastighetsekonomiska konsekvenser för 2–3 designalternativ i tidiga skeden så att val av huvudkoncept kan göras på mer informerad grund?"
       }
-    ];
-
-    const skillGroups = {
-      "competence-skills": [
-        "Klimatberäkning/LCA",
-        "Affärsmodeller",
-        "Parametrisk design",
-        "Tidiga skeden",
-        "Vibe coding",
-        "BIM"
-      ],
-      "design-tech-skills": [
-        "Revit",
-        "Rhino",
-        "Grasshopper",
-        "Dynamo",
-        "SketchUp",
-        "Archicad",
-        "AutoCAD",
-        "Navisworks",
-        "Solibri",
-        "Speckle",
-        "Ladybug Tools",
-        "One Click LCA",
-        "Visual Studio Code",
-        "GitHub",
-        "Figma",
-        "Power BI",
-        "Excel"
-      ]
-    };
-
-    const flattenedThemes = categories.flatMap((category, categoryIndex) =>
-      category.themes.map((theme, themeIndex) => ({
-        id: `${categoryIndex}-${themeIndex}`,
-        title: theme,
-        category: category.title,
-        className: category.className
-      }))
-    );
-
-    let peopleByTheme = flattenedThemes.map(() => []);
-    let selectedSkill = null;
-
-    function createThemes() {
-      const area = document.getElementById("theme-area");
-      area.innerHTML = "";
-
-      let globalThemeIndex = 0;
-
-      categories.forEach(category => {
-        const section = document.createElement("section");
-        section.className = "category";
-
-        const heading = document.createElement("h2");
-        heading.className = `category-title ${category.className}`;
-        heading.textContent = category.title;
-        section.appendChild(heading);
-
-        const grid = document.createElement("div");
-        grid.className = "themes";
-
-        category.themes.forEach(themeTitle => {
-          const themeIndex = globalThemeIndex;
-          const card = document.createElement("article");
-          card.className = `theme-card ${category.className}`;
-          card.innerHTML = `
-            <h3>${themeTitle}</h3>
-            <label>Namn
-              <input type="text" id="name-${themeIndex}" placeholder="Ex. Anna Andersson" />
-            </label>
-            <label>Företag
-              <input type="text" id="company-${themeIndex}" placeholder="Ex. Arkitektkontoret AB" />
-            </label>
-            <button class="save-btn" type="button" onclick="savePerson(${themeIndex})">Spara anmälan</button>
-            <ul class="people-list" id="list-${themeIndex}"></ul>
-          `;
-          grid.appendChild(card);
-          globalThemeIndex++;
-        });
-
-        section.appendChild(grid);
-        area.appendChild(section);
-      });
-
-      flattenedThemes.forEach((_, index) => renderPeople(index));
-    }
-
-    function createSkillTags() {
-      Object.entries(skillGroups).forEach(([containerId, skills]) => {
-        const container = document.getElementById(containerId);
-        container.innerHTML = "";
-        skills.forEach(skill => container.appendChild(makeSkillTag(skill)));
-      });
-    }
-
-    function makeSkillTag(skill) {
-      const tag = document.createElement("span");
-      tag.className = "skill-tag";
-      tag.textContent = skill;
-      tag.draggable = true;
-      tag.dataset.skill = skill;
-      tag.title = "Dra till en person eller klicka och välj person";
-
-      tag.addEventListener("dragstart", event => {
-        event.dataTransfer.setData("text/plain", skill);
-      });
-
-      tag.addEventListener("click", () => {
-        selectedSkill = skill;
-        document.querySelectorAll(".skill-tag").forEach(t => t.style.outline = "none");
-        tag.style.outline = "3px solid rgba(47,111,94,0.25)";
-      });
-
-      return tag;
-    }
-
-    function addOtherSkill() {
-      const input = document.getElementById("other-skill");
-      const skill = input.value.trim();
-      if (!skill) return;
-      document.getElementById("design-tech-skills").appendChild(makeSkillTag(skill));
-      input.value = "";
-    }
-
-    function savePerson(themeIndex) {
-      const nameInput = document.getElementById(`name-${themeIndex}`);
-      const companyInput = document.getElementById(`company-${themeIndex}`);
-      const name = nameInput.value.trim();
-      const company = companyInput.value.trim();
-
-      if (!name) {
-        alert("Skriv in namn innan du sparar.");
-        return;
+    ]
+  },
+  {
+    title: "Återbruk",
+    className: "reuse",
+    themes: [
+      {
+        title: "Parallell design med och utan återbruk",
+        desc: "Hur kan vi snabbt jämföra ett designförslag med och utan återbruk i tidiga skeden så att konsekvenser för kostnad, klimat och gestaltning blir tydliga?"
+      },
+      {
+        title: "Behålla flexibilitet genom designprocess och projektering",
+        desc: "Hur kan vi arbeta med skarpa designförslag och samtidigt behålla flexibilitet i måttsättning, material och val av produkt?"
+      },
+      {
+        title: "Matchning mellan design och tillgängligt återbruksmaterial",
+        desc: "Hur kan vi matcha ett tidigt designförslag med tillgängliga återbruksmaterial så att arkitekten kan testa vad som är möjligt utan att låsa lösningen?"
       }
+    ]
+  }
+];
 
-      peopleByTheme[themeIndex].push({
-        id: crypto.randomUUID ? crypto.randomUUID() : String(Date.now() + Math.random()),
-        name,
-        company,
-        skills: []
-      });
+function createThemes() {
+  const area = document.getElementById("theme-area");
+  area.innerHTML = "";
 
-      nameInput.value = "";
-      companyInput.value = "";
-      renderPeople(themeIndex);
-    }
+  categories.forEach(category => {
+    const section = document.createElement("section");
 
-    function removePerson(themeIndex, personId) {
-      peopleByTheme[themeIndex] = peopleByTheme[themeIndex].filter(person => person.id !== personId);
-      renderPeople(themeIndex);
-    }
+    const heading = document.createElement("h2");
+    heading.className = `category-title ${category.className}`;
+    heading.textContent = category.title;
+    section.appendChild(heading);
 
-    function addSkillToPerson(themeIndex, personId, skill) {
-      if (!skill) return;
-      const person = peopleByTheme[themeIndex].find(person => person.id === personId);
-      if (!person) return;
-      if (!person.skills.includes(skill)) person.skills.push(skill);
-      selectedSkill = null;
-      document.querySelectorAll(".skill-tag").forEach(t => t.style.outline = "none");
-      renderPeople(themeIndex);
-    }
+    const grid = document.createElement("div");
+    grid.className = "themes";
 
-    function removeSkillFromPerson(themeIndex, personId, skill) {
-      const person = peopleByTheme[themeIndex].find(person => person.id === personId);
-      if (!person) return;
-      person.skills = person.skills.filter(existingSkill => existingSkill !== skill);
-      renderPeople(themeIndex);
-    }
+    category.themes.forEach(theme => {
+      const card = document.createElement("article");
+      card.className = `theme-card ${category.className}`;
 
-    function renderPeople(themeIndex) {
-      const list = document.getElementById(`list-${themeIndex}`);
-      if (!list) return;
-      list.innerHTML = "";
+      card.innerHTML = `
+        <h3>${theme.title}</h3>
+        <div class="theme-subtitle">${theme.desc}</div>
+        <label>Namn<input type="text" /></label>
+        <label>Företag<input type="text" /></label>
+        <button class="save-btn">Spara</button>
+      `;
 
-      if (peopleByTheme[themeIndex].length === 0) {
-        const empty = document.createElement("li");
-        empty.className = "empty-hint";
-        empty.textContent = "Ingen anmäld ännu.";
-        list.appendChild(empty);
-        return;
-      }
+      grid.appendChild(card);
+    });
 
-      peopleByTheme[themeIndex].forEach(person => {
-        const li = document.createElement("li");
-        li.className = "person";
+    section.appendChild(grid);
+    area.appendChild(section);
+  });
+}
 
-        li.addEventListener("dragover", event => {
-          event.preventDefault();
-          li.classList.add("drag-over");
-        });
-
-        li.addEventListener("dragleave", () => li.classList.remove("drag-over"));
-
-        li.addEventListener("drop", event => {
-          event.preventDefault();
-          li.classList.remove("drag-over");
-          addSkillToPerson(themeIndex, person.id, event.dataTransfer.getData("text/plain"));
-        });
-
-        li.addEventListener("click", () => {
-          if (selectedSkill) addSkillToPerson(themeIndex, person.id, selectedSkill);
-        });
-
-        const top = document.createElement("div");
-        top.className = "person-top";
-        top.innerHTML = `
-          <div>
-            <div class="person-name">${escapeHtml(person.name)}</div>
-            <div class="person-company">${escapeHtml(person.company || "Företag ej angivet")}</div>
-          </div>
-          <button class="remove-btn" type="button">Ta bort</button>
-        `;
-
-        top.querySelector("button").addEventListener("click", event => {
-          event.stopPropagation();
-          removePerson(themeIndex, person.id);
-        });
-
-        const skills = document.createElement("div");
-        skills.className = "person-skills";
-
-        if (person.skills.length === 0) {
-          const hint = document.createElement("span");
-          hint.className = "empty-hint";
-          hint.textContent = "Dra kompetenser hit.";
-          skills.appendChild(hint);
-        } else {
-          person.skills.forEach(skill => {
-            const skillEl = document.createElement("span");
-            skillEl.className = "assigned-skill";
-            skillEl.innerHTML = `${escapeHtml(skill)} <button type="button" aria-label="Ta bort kompetens">×</button>`;
-            skillEl.querySelector("button").addEventListener("click", event => {
-              event.stopPropagation();
-              removeSkillFromPerson(themeIndex, person.id, skill);
-            });
-            skills.appendChild(skillEl);
-          });
-        }
-
-        li.appendChild(top);
-        li.appendChild(skills);
-        list.appendChild(li);
-      });
-    }
-
-    function escapeHtml(text) {
-      return String(text)
-        .replaceAll("&", "&amp;")
-        .replaceAll("<", "&lt;")
-        .replaceAll(">", "&gt;")
-        .replaceAll('"', "&quot;")
-        .replaceAll("'", "&#039;");
-    }
-
-    createThemes();
-    createSkillTags();
-  </script>
+createThemes();
+</script>
 </body>
 </html>
-
