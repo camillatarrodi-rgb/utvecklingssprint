@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Välj tema och kompetenser</title>
+  <style>
+    :root {
+      --bg: #f6f4ef;
+      --card: #ffffff;
+      --text: #1f2933;
+      --muted: #667085;
+      --border: #d9d6cf;
+      --accent: #2f6f5e;
+      --accent-soft: #e1f0ea;
+      --danger: #a33a3a;
+      --danger-soft: #f7e4e4;
+      --shadow: 0 8px 22px rgba(0,0,0,0.07);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.45;
+    }
+
+    header {
+      padding: 44px 20px 20px;
+      text-align: center;
+    }
+
+    h1 {
+      margin: 0 0 10px;
+      font-size: clamp(2rem, 5vw, 3.6rem);
+      letter-spacing: -0.04em;
+    }
+
+    .intro {
+      max-width: 780px;
+      margin: 0 auto;
+      color: var(--muted);
+      font-size: 1.08rem;
+    }
+
+    main {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 320px;
+      gap: 20px;
+      align-items: start;
+    }
+
+    .themes {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 18px;
+    }
+
+    .theme-card, .skills-panel {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 22px;
+      padding: 18px;
+      box-shadow: var(--shadow);
+    }
+
+    .theme-card h2, .skills-panel h2 {
+      margin: 0 0 8px;
+      font-size: 1.25rem;
+    }
+
+    .theme-card p, .skills-panel p {
+      margin: 0 0 14px;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    label {
+      display: block;
+      margin-top: 10px;
+      font-weight: 650;
+      font-size: 0.9rem;
+    }
+
+    input[type="text"] {
+      width: 100%;
+      margin-top: 5px;
+      padding: 10px 11px;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      font: inherit;
+    }
+
+    button {
+      border: 0;
+      border-radius: 12px;
+      padding: 9px 12px;
+      font: inherit;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .save-btn {
+      width: 100%;
+      margin-top: 12px;
+      background: var(--accent);
+      color: #fff;
+    }
+
+    .remove-btn {
+      background: var(--danger-soft);
+      color: var(--danger);
+      padding: 6px 9px;
+      font-size: 0.85rem;
+    }
+
+    .people-list {
+      list-style: none;
+      padding: 0;
+      margin: 14px 0 0;
+      display: grid;
+      gap: 10px;
+    }
+
+    .person {
+      border: 1px dashed var(--border);
+      border-radius: 16px;
+      padding: 12px;
+      background: #fafaf8;
+      min-height: 92px;
+      transition: 0.15s ease;
+    }
+
+    .person.drag-over {
+      border-color: var(--accent);
+      background: var(--accent-soft);
+      transform: scale(1.01);
+    }
+
+    .person-top {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      align-items: start;
+    }
+
+    .person-name {
+      font-weight: 800;
+    }
+
+    .person-company {
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+
+    .person-skills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 10px;
+      min-height: 28px;
+    }
+
+    .assigned-skill {
+      display: inline-flex;
+      gap: 5px;
+      align-items: center;
+      border-radius: 999px;
+      background: var(--accent-soft);
+      color: var(--accent);
+      padding: 5px 8px;
+      font-size: 0.82rem;
+      font-weight: 700;
+    }
+
+    .assigned-skill button {
+      padding: 0 3px;
+      background: transparent;
+      color: inherit;
+      font-weight: 900;
+    }
+
+    .empty-hint {
+      color: var(--muted);
+      font-size: 0.86rem;
+      margin-top: 8px;
+    }
+
+    .skills-panel {
+      position: sticky;
+      top: 16px;
+    }
+
+    .skill-group {
+      margin-top: 18px;
+    }
+
+    .skill-group h3 {
+      margin: 0 0 9px;
+      color: var(--accent);
+      font-size: 0.98rem;
+    }
+
+    .skill-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .skill-tag {
+      display: inline-flex;
+      align-items: center;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      background: #fff;
+      padding: 8px 10px;
+      font-size: 0.9rem;
+      cursor: grab;
+      user-select: none;
+    }
+
+    .skill-tag:active { cursor: grabbing; }
+
+    .other-row {
+      margin-top: 12px;
+      display: grid;
+      gap: 8px;
+    }
+
+    .add-other {
+      background: #ebe8e1;
+      color: var(--text);
+    }
+
+    .print-btn {
+      margin-top: 20px;
+      width: 100%;
+      background: #ebe8e1;
+      color: var(--text);
+    }
+
+    @media (max-width: 900px) {
+      .layout { grid-template-columns: 1fr; }
+      .skills-panel { position: static; }
+    }
+
+    @media print {
+      .skills-panel, .save-btn, .remove-btn, .assigned-skill button { display: none; }
+      body { background: #fff; }
+      .layout { display: block; }
+      .theme-card { break-inside: avoid; box-shadow: none; margin-bottom: 16px; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Välj tema och kompetenser</h1>
+    <p class="intro">Skriv in namn och företag under ett tema och klicka på Spara. Dra sedan kompetenstaggar till personen för att visa vem som kan vad.</p>
+  </header>
+
+  <main>
+    <div class="layout">
+      <section class="themes" id="themes" aria-label="Teman"></section>
+
+      <aside class="skills-panel" aria-label="Kompetenser">
+        <h2>Kompetenser</h2>
+        <p>Dra en tagg till en person. Du kan också klicka på en tagg och sedan klicka på en person.</p>
+
+        <div class="skill-group">
+          <h3>Utvecklingsförmågor</h3>
+          <div class="skill-tags" id="development-skills"></div>
+        </div>
+
+        <div class="skill-group">
+          <h3>Arkitektur och byggd miljö</h3>
+          <div class="skill-tags" id="architecture-skills"></div>
+        </div>
+
+        <div class="skill-group">
+          <h3>Hållbarhet, teknik och analys</h3>
+          <div class="skill-tags" id="technical-skills"></div>
+        </div>
+
+        <div class="skill-group">
+          <h3>Annan kompetens</h3>
+          <div class="other-row">
+            <input id="other-skill" type="text" placeholder="Skriv egen kompetens" />
+            <button class="add-other" type="button" onclick="addOtherSkill()">Lägg till tagg</button>
+          </div>
+        </div>
+
+        <button class="print-btn" type="button" onclick="window.print()">Skriv ut / spara som PDF</button>
+      </aside>
+    </div>
+  </main>
+
+  <script>
+    const themes = [
+      {
+        title: "Cirkulär omställning",
+        description: "Materialflöden, återbruk, resurseffektivitet och nya arbetssätt för cirkulärt byggande."
+      },
+      {
+        title: "Social hållbarhet och gestaltad livsmiljö",
+        description: "Platsutveckling, hälsa, trygghet, jämlikhet och arkitekturens samhällsvärde."
+      },
+      {
+        title: "Digitalisering och AI",
+        description: "Digitala verktyg, data, AI, automation och nya metoder i planering, design och byggande."
+      },
+      {
+        title: "Träbyggande och klimatsmarta system",
+        description: "Konstruktion, systemlösningar, klimatnytta, byggbarhet och innovation inom trä och biobaserade material."
+      }
+    ];
+
+    const skillGroups = {
+      "development-skills": [
+        "Processledning",
+        "Innovationsledning",
+        "Förändringsledning",
+        "Strategiutveckling",
+        "Affärsutveckling",
+        "Projektledning",
+        "Workshopledning",
+        "Tvärsektoriell samverkan",
+        "FoU-projekt"
+      ],
+      "architecture-skills": [
+        "Arkitektonisk gestaltning",
+        "Stadsbyggnad",
+        "Platsutveckling",
+        "Bostadsutveckling",
+        "Gestaltad livsmiljö",
+        "Byggbarhet",
+        "Detaljplanering",
+        "Programarbete",
+        "Tidiga skeden"
+      ],
+      "technical-skills": [
+        "Cirkulärt byggande",
+        "Återbruk",
+        "Klimatberäkning/LCA",
+        "Träbyggande",
+        "Akustik/ljudmiljö",
+        "Digitala verktyg",
+        "AI i byggprocessen",
+        "Dataanalys",
+        "Omvärldsanalys"
+      ]
+    };
+
+    let peopleByTheme = themes.map(() => []);
+    let selectedSkill = null;
+
+    function createThemes() {
+      const container = document.getElementById("themes");
+      container.innerHTML = "";
+
+      themes.forEach((theme, themeIndex) => {
+        const card = document.createElement("article");
+        card.className = "theme-card";
+        card.innerHTML = `
+          <h2>${theme.title}</h2>
+          <p>${theme.description}</p>
+          <label>Namn
+            <input type="text" id="name-${themeIndex}" placeholder="Ex. Anna Andersson" />
+          </label>
+          <label>Företag
+            <input type="text" id="company-${themeIndex}" placeholder="Ex. Arkitektkontoret AB" />
+          </label>
+          <button class="save-btn" type="button" onclick="savePerson(${themeIndex})">Spara anmälan</button>
+          <ul class="people-list" id="list-${themeIndex}"></ul>
+        `;
+        container.appendChild(card);
+        renderPeople(themeIndex);
+      });
+    }
+
+    function createSkillTags() {
+      Object.entries(skillGroups).forEach(([containerId, skills]) => {
+        const container = document.getElementById(containerId);
+        container.innerHTML = "";
+        skills.forEach(skill => container.appendChild(makeSkillTag(skill)));
+      });
+    }
+
+    function makeSkillTag(skill) {
+      const tag = document.createElement("span");
+      tag.className = "skill-tag";
+      tag.textContent = skill;
+      tag.draggable = true;
+      tag.dataset.skill = skill;
+      tag.title = "Dra till en person eller klicka och välj person";
+
+      tag.addEventListener("dragstart", event => {
+        event.dataTransfer.setData("text/plain", skill);
+      });
+
+      tag.addEventListener("click", () => {
+        selectedSkill = skill;
+        document.querySelectorAll(".skill-tag").forEach(t => t.style.outline = "none");
+        tag.style.outline = "3px solid var(--accent-soft)";
+      });
+
+      return tag;
+    }
+
+    function addOtherSkill() {
+      const input = document.getElementById("other-skill");
+      const skill = input.value.trim();
+      if (!skill) return;
+      document.getElementById("technical-skills").appendChild(makeSkillTag(skill));
+      input.value = "";
+    }
+
+    function savePerson(themeIndex) {
+      const nameInput = document.getElementById(`name-${themeIndex}`);
+      const companyInput = document.getElementById(`company-${themeIndex}`);
+      const name = nameInput.value.trim();
+      const company = companyInput.value.trim();
+
+      if (!name) {
+        alert("Skriv in namn innan du sparar.");
+        return;
+      }
+
+      peopleByTheme[themeIndex].push({
+        id: crypto.randomUUID ? crypto.randomUUID() : String(Date.now() + Math.random()),
+        name,
+        company,
+        skills: []
+      });
+
+      nameInput.value = "";
+      companyInput.value = "";
+      renderPeople(themeIndex);
+    }
+
+    function removePerson(themeIndex, personId) {
+      peopleByTheme[themeIndex] = peopleByTheme[themeIndex].filter(person => person.id !== personId);
+      renderPeople(themeIndex);
+    }
+
+    function addSkillToPerson(themeIndex, personId, skill) {
+      if (!skill) return;
+      const person = peopleByTheme[themeIndex].find(person => person.id === personId);
+      if (!person) return;
+      if (!person.skills.includes(skill)) person.skills.push(skill);
+      selectedSkill = null;
+      document.querySelectorAll(".skill-tag").forEach(t => t.style.outline = "none");
+      renderPeople(themeIndex);
+    }
+
+    function removeSkillFromPerson(themeIndex, personId, skill) {
+      const person = peopleByTheme[themeIndex].find(person => person.id === personId);
+      if (!person) return;
+      person.skills = person.skills.filter(existingSkill => existingSkill !== skill);
+      renderPeople(themeIndex);
+    }
+
+    function renderPeople(themeIndex) {
+      const list = document.getElementById(`list-${themeIndex}`);
+      if (!list) return;
+      list.innerHTML = "";
+
+      if (peopleByTheme[themeIndex].length === 0) {
+        const empty = document.createElement("li");
+        empty.className = "empty-hint";
+        empty.textContent = "Ingen anmäld ännu.";
+        list.appendChild(empty);
+        return;
+      }
+
+      peopleByTheme[themeIndex].forEach(person => {
+        const li = document.createElement("li");
+        li.className = "person";
+        li.dataset.personId = person.id;
+
+        li.addEventListener("dragover", event => {
+          event.preventDefault();
+          li.classList.add("drag-over");
+        });
+
+        li.addEventListener("dragleave", () => {
+          li.classList.remove("drag-over");
+        });
+
+        li.addEventListener("drop", event => {
+          event.preventDefault();
+          li.classList.remove("drag-over");
+          const skill = event.dataTransfer.getData("text/plain");
+          addSkillToPerson(themeIndex, person.id, skill);
+        });
+
+        li.addEventListener("click", () => {
+          if (selectedSkill) addSkillToPerson(themeIndex, person.id, selectedSkill);
+        });
+
+        const top = document.createElement("div");
+        top.className = "person-top";
+        top.innerHTML = `
+          <div>
+            <div class="person-name">${escapeHtml(person.name)}</div>
+            <div class="person-company">${escapeHtml(person.company || "Företag ej angivet")}</div>
+          </div>
+          <button class="remove-btn" type="button">Ta bort</button>
+        `;
+
+        top.querySelector("button").addEventListener("click", event => {
+          event.stopPropagation();
+          removePerson(themeIndex, person.id);
+        });
+
+        const skills = document.createElement("div");
+        skills.className = "person-skills";
+
+        if (person.skills.length === 0) {
+          const hint = document.createElement("span");
+          hint.className = "empty-hint";
+          hint.textContent = "Dra kompetenser hit.";
+          skills.appendChild(hint);
+        } else {
+          person.skills.forEach(skill => {
+            const skillEl = document.createElement("span");
+            skillEl.className = "assigned-skill";
+            skillEl.innerHTML = `${escapeHtml(skill)} <button type="button" aria-label="Ta bort kompetens">×</button>`;
+            skillEl.querySelector("button").addEventListener("click", event => {
+              event.stopPropagation();
+              removeSkillFromPerson(themeIndex, person.id, skill);
+            });
+            skills.appendChild(skillEl);
+          });
+        }
+
+        li.appendChild(top);
+        li.appendChild(skills);
+        list.appendChild(li);
+      });
+    }
+
+    function escapeHtml(text) {
+      return String(text)
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+    }
+
+    createThemes();
+    createSkillTags();
+  </script>
+</body>
+</html>
