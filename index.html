@@ -3,7 +3,8 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Temaval och kompetenser</title>
+  <title>Designteknologier: Utvecklingssprintar vt 2026</title>
+  <title>Temaval och kompetenser</title>
 <style>
 :root {
 --text: #17212b;
@@ -292,23 +293,23 @@ gap: 8px;
 
 .tool-btn { background: #ebe8e1; color: var(--text); }
 
-.mailing-list {
-margin-top: 12px;
-padding-top: 10px;
-border-top: 1px solid rgba(0,0,0,0.12);
-font-size: 0.84rem;
-}
+    .mailing-list {
+      margin-top: 12px;
+      padding-top: 10px;
+      border-top: 1px solid rgba(0,0,0,0.12);
+      font-size: 0.84rem;
+    }
 
-.mailing-title {
-font-weight: 900;
-color: rgba(0,0,0,0.66);
-margin-bottom: 4px;
-}
+    .mailing-title {
+      font-weight: 900;
+      color: rgba(0,0,0,0.66);
+      margin-bottom: 4px;
+    }
 
-.mailing-link {
-color: inherit;
-word-break: break-word;
-}
+    .mailing-link {
+      color: inherit;
+      word-break: break-word;
+    }
 .clear-btn { background: var(--danger-soft); color: var(--danger); }
 
 @media (max-width: 980px) {
@@ -328,7 +329,8 @@ header { color: #111; text-shadow: none; }
 <body>
 <header>
 <h1>Designteknologier: Utvecklingssprintar vt 2026</h1>
-<p class="intro">Anmäl dig till 1–2 sprintar och dra sedan kompetenstaggar till ditt namn (för att kartlägga vilka kunskapsresurser gruppen har). Allt sparas automatiskt i denna webbläsare.</p>
+    <p class="intro">Anmäl dig till 1-2 sprintar och dra sedan kompetenstaggar till ditt namn (för att kartlägga vilka kunskapssresurser gruppen har). Allt sparas automatiskt i denna webbläsare.</p>
+    <p class="intro">Anmäl dig till 1–2 sprintar och dra sedan kompetenstaggar till ditt namn (för att kartlägga vilka kunskapsresurser gruppen har). Allt sparas automatiskt i denna webbläsare.</p>
 </header>
 
 <main>
@@ -498,12 +500,12 @@ card.innerHTML = `
            <label>Företag
              <input type="text" id="company-${themeIndex}" placeholder="Ex. Arkitektkontoret AB" />
            </label>
-           <label>E-post
-             <input type="text" id="email-${themeIndex}" placeholder="Ex. anna@foretag.se" />
-           </label>
+            <label>E-post
+              <input type="text" id="email-${themeIndex}" placeholder="Ex. anna@foretag.se" />
+            </label>
            <button class="save-btn" type="button" onclick="savePerson(${themeIndex})">Spara anmälan</button>
            <ul class="people-list" id="list-${themeIndex}"></ul>
-           <div class="mailing-list" id="mailing-${themeIndex}"></div>
+            <div class="mailing-list" id="mailing-${themeIndex}"></div>
          `;
 grid.appendChild(card);
 themeIndex++;
@@ -561,32 +563,32 @@ createAllTags();
 function savePerson(themeIndex) {
 const nameInput = document.getElementById(`name-${themeIndex}`);
 const companyInput = document.getElementById(`company-${themeIndex}`);
-const emailInput = document.getElementById(`email-${themeIndex}`);
+      const emailInput = document.getElementById(`email-${themeIndex}`);
 const name = nameInput.value.trim();
 const company = companyInput.value.trim();
-const email = emailInput.value.trim();
+      const email = emailInput.value.trim();
 
 if (!name) {
 alert("Skriv in namn innan du sparar.");
 return;
 }
 
-if (!email) {
-alert("Skriv in e-post innan du sparar.");
-return;
-}
+      if (!email) {
+        alert("Skriv in e-post innan du sparar.");
+        return;
+      }
 
 peopleByTheme[themeIndex].push({
 id: crypto.randomUUID ? crypto.randomUUID() : String(Date.now() + Math.random()),
 name,
 company,
-email,
+        email,
 skills: []
 });
 
 nameInput.value = "";
 companyInput.value = "";
-emailInput.value = "";
+      emailInput.value = "";
 saveData();
 renderPeople(themeIndex);
 }
@@ -653,7 +655,7 @@ top.innerHTML = `
          <div>
            <div class="person-name">${escapeHtml(person.name)}</div>
            <div class="person-company">${escapeHtml(person.company || "Företag ej angivet")}</div>
-           <div class="person-company">${person.email ? `<a href="mailto:${escapeHtml(person.email)}">${escapeHtml(person.email)}</a>` : "E-post saknas"}</div>
+            <div class="person-company">${person.email ? `<a href="mailto:${escapeHtml(person.email)}">${escapeHtml(person.email)}</a>` : "E-post saknas"}</div>
          </div>
          <button class="remove-btn" type="button">Ta bort</button>
        `;
@@ -688,26 +690,26 @@ li.appendChild(skills);
 list.appendChild(li);
 });
 
-renderMailingList(themeIndex);
-}
+      renderMailingList(themeIndex);
+    }
 
-function renderMailingList(themeIndex) {
-const box = document.getElementById(`mailing-${themeIndex}`);
-if (!box) return;
-const emails = (peopleByTheme[themeIndex] || [])
-.map(person => person.email)
-.filter(Boolean);
+    function renderMailingList(themeIndex) {
+      const box = document.getElementById(`mailing-${themeIndex}`);
+      if (!box) return;
+      const emails = (peopleByTheme[themeIndex] || [])
+        .map(person => person.email)
+        .filter(Boolean);
 
-if (emails.length === 0) {
-box.innerHTML = "";
-return;
-}
+      if (emails.length === 0) {
+        box.innerHTML = "";
+        return;
+      }
 
-const mailto = `mailto:${emails.join(",")}`;
-box.innerHTML = `
-       <div class="mailing-title">Mailinglista</div>
-       <a class="mailing-link" href="${mailto}">${emails.join(", ")}</a>
-     `;
+      const mailto = `mailto:${emails.join(",")}`;
+      box.innerHTML = `
+        <div class="mailing-title">Mailinglista</div>
+        <a class="mailing-link" href="${mailto}">${emails.join(", ")}</a>
+      `;
 }
 
 function clearAllData() {
@@ -731,78 +733,6 @@ return String(text)
 loadData();
 createThemes();
 createAllTags();
-</script>
-  <script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
-  import {
-    getFirestore,
-    collection,
-    addDoc,
-    onSnapshot,
-    query,
-    orderBy,
-    serverTimestamp
-  } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
-
-  const firebaseConfig = {
-    apiKey: "AIzaSyCB-okFdEpQ58APMeLSrricPGgbUx3uOd0",
-    authDomain: "utvecklingssprintar.firebaseapp.com",
-    projectId: "utvecklingssprintar",
-    storageBucket: "utvecklingssprintar.firebasestorage.app",
-    messagingSenderId: "1040641301479",
-    appId: "1:1040641301479:web:c68b975c0417c14e57fb42"
-  };
-
-  const app = initializeApp(firebaseConfig);
-  const db = getFirestore(app);
-
-  // 🔹 SKICKA DATA
-  async function skickaPilotval() {
-    const payload = buildPayload();
-
-    await addDoc(collection(db, "pilotval"), {
-      ...payload,
-      createdAt: serverTimestamp()
-    });
-
-    toast("Sparat! 🎉");
-  }
-
-  // koppla till din befintliga knapp
-  const btn = document.querySelector("#downloadBtn");
-  btn.textContent = "Skicka pilotval";
-  btn.addEventListener("click", skickaPilotval);
-
-  // 🔹 VISA DATA LIVE
-  const liveDiv = document.createElement("div");
-  liveDiv.className = "summary";
-  liveDiv.innerHTML = `
-    <h4>Inkomna svar (live)</h4>
-    <div id="liveData" class="monoBox">Laddar...</div>
-  `;
-
-  document.querySelector(".aside").after(liveDiv);
-
-  const liveBox = document.querySelector("#liveData");
-
-  const q = query(collection(db, "pilotval"), orderBy("createdAt", "desc"));
-
-  onSnapshot(q, (snapshot) => {
-    const rows = [];
-
-    snapshot.forEach((doc) => {
-      const d = doc.data();
-
-      rows.push(
-        `${d.org || "—"}\n` +
-        `${d.contact?.name || ""} (${d.contact?.email || ""})\n` +
-        `Val: ${(d.picks || []).map(p => p.title).join(", ")}\n` +
-        `---`
-      );
-    });
-
-    liveBox.textContent = rows.join("\n\n") || "Inga svar ännu.";
-  });
 </script>
 </body>
 </html>
