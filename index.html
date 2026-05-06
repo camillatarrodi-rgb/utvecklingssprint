@@ -757,7 +757,8 @@ createAllTags();
   const app = initializeApp(firebaseConfig);
   const db = getDatabase(app);
 
-  const button = document.querySelector("#downloadBtn");
+  // Hittar första knappen på sidan
+  const button = document.querySelector("button");
 
   console.log("Knapp hittad:", button);
 
@@ -780,7 +781,10 @@ createAllTags();
         alert("Fel: " + error.message);
       }
     });
+  } else {
+    console.error("Ingen knapp hittades på sidan.");
   }
+</script>
 </script>
 </body>
 </html>
