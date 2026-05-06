@@ -125,7 +125,7 @@ button { border: 0; border-radius: 13px; padding: 9px 12px; font: inherit; font-
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
-import { getDatabase, ref, push } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-database.js";
+import { getDatabase, ref, push, onValue } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-database.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyCB-okFdEpQ58APMeLSrricPGgbUx3uOd0",
@@ -542,7 +542,6 @@ loadData();
 createThemes();
 createAllTags();
 
-import { onValue } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-database.js";
 
 const liveBox = document.createElement("div");
 liveBox.style.margin = "20px";
