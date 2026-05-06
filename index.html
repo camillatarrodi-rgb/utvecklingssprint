@@ -757,7 +757,6 @@ createAllTags();
   const app = initializeApp(firebaseConfig);
   const db = getDatabase(app);
 
-  // Hittar första knappen på sidan
   const button = document.querySelector("button");
 
   console.log("Knapp hittad:", button);
@@ -768,23 +767,24 @@ createAllTags();
     button.addEventListener("click", async () => {
       console.log("Knappen klickades");
 
-      try {
-        const organisation = document.querySelector("#organisation")?.value || "";
-const name = document.querySelector("namn")?.value || "";
-const organisation = document.querySelector("organisation")?.value || "";
-const email  = document.querySelector("E-post")?.value || "";
+      const organisation = document.querySelector("#organisation")?.value || "";
+      const name = document.querySelector("#name")?.value || "";
+      const email = document.querySelector("#email")?.value || "";
+      const role = document.querySelector("#role")?.value || "";
+      const comment = document.querySelector("#comment")?.value || "";
 
-await push(ref(db, "pilotval"), {
-  organisation,
-  name,
-  email,
-  role,
-  comment,
-  time: new Date().toISOString()
-});
+      try {
+        await push(ref(db, "pilotval"), {
+          organisation,
+          name,
+          email,
+          role,
+          comment,
+          time: new Date().toISOString()
+        });
 
         console.log("Sparat i Firebase");
-        alert("Sparat i Firebase!");
+        alert("Anmälan sparad! 🎉");
       } catch (error) {
         console.error("Firebase-fel:", error);
         alert("Fel: " + error.message);
@@ -794,6 +794,7 @@ await push(ref(db, "pilotval"), {
     console.error("Ingen knapp hittades på sidan.");
   }
 </script>
-</script>
+</body>
+</html>
 </body>
 </html>
