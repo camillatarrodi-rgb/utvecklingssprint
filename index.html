@@ -769,10 +769,20 @@ createAllTags();
       console.log("Knappen klickades");
 
       try {
-        await push(ref(db, "test"), {
-          message: "Det funkar",
-          time: new Date().toISOString()
-        });
+        const organisation = document.querySelector("#organisation")?.value || "";
+const name = document.querySelector("#name")?.value || "";
+const email = document.querySelector("#email")?.value || "";
+const role = document.querySelector("#role")?.value || "";
+const comment = document.querySelector("#comment")?.value || "";
+
+await push(ref(db, "pilotval"), {
+  organisation,
+  name,
+  email,
+  role,
+  comment,
+  time: new Date().toISOString()
+});
 
         console.log("Sparat i Firebase");
         alert("Sparat i Firebase!");
