@@ -541,6 +541,28 @@ document.getElementById("printBtn").addEventListener("click", () => window.print
 loadData();
 createThemes();
 createAllTags();
-</script>
-</body>
-</html>
+
+import { onValue } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-database.js";
+
+const liveBox = document.createElement("div");
+liveBox.style.margin = "20px";
+liveBox.innerHTML = `
+  <h2>Inkomna anmälningar</h2>
+  <pre id="liveData"></pre>
+`;
+
+document.body.appendChild(liveBox);
+
+onValue(ref(db, "pilotval"), snapshot => {
+  const data = snapshot.val();
+  const el = document.getElementById("liveData");
+
+  if (!data) {
+    el.textContent = "Inga anmälningar ännu.";
+    return;
+  }
+
+  el.textContent = Object.values(data)
+    .map(p => `${p.name} (${p.company}) – ${p.sprintTitle}`)
+    .join("\n");
+});
