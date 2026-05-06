@@ -739,9 +739,7 @@ createAllTags();
   import {
     getDatabase,
     ref,
-    push,
-    onValue,
-    serverTimestamp
+    push
   } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-database.js";
 
   const firebaseConfig = {
@@ -758,54 +756,16 @@ createAllTags();
   const db = getDatabase(app);
 
   async function skickaPilotval() {
-    const payload = buildPayload();
-
-    await push(ref(db, "pilotval"), {
-      ...payload,
-      createdAt: serverTimestamp()
+    await push(ref(db, "test"), {
+      test: "funkar!",
+      time: Date.now()
     });
 
-    toast("Anmälan är sparad!");
+    alert("Nu sparades det!");
   }
 
-  const btn = document.querySelector("#downloadBtn");
-  btn.textContent = "Spara anmälan";
-  btn.addEventListener("click", skickaPilotval);
-
-  const liveDiv = document.createElement("div");
-  liveDiv.className = "summary";
-  liveDiv.style.margin = "16px";
-  liveDiv.innerHTML = `
-    <h4>Inkomna anmälningar</h4>
-    <div id="liveData" class="monoBox">Laddar...</div>
-  `;
-
-  document.querySelector(".aside").after(liveDiv);
-
-  const liveBox = document.querySelector("#liveData");
-
-  onValue(ref(db, "pilotval"), (snapshot) => {
-    const data = snapshot.val();
-
-    if (!data) {
-      liveBox.textContent = "Inga anmälningar ännu.";
-      return;
-    }
-
-    const rows = Object.values(data).reverse().map(d => {
-      const picks = (d.picks || [])
-        .map(p => `[${p.id}] ${p.title}`)
-        .join(", ");
-
-      return `${d.org || "—"}
-Kontakt: ${d.contact?.name || "—"} (${d.contact?.email || "—"})
-Val: ${picks || "—"}
-Kommentar: ${d.note || "—"}
-----------------------------------------`;
-    });
-
-    liveBox.textContent = rows.join("\n\n");
-  });
+  document.querySelector("#downloadBtn")
+    .addEventListener("click", skickaPilotval);
 </script>
 </body>
 </html>
