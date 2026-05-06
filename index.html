@@ -388,8 +388,16 @@ try {
   alert("Kunde inte spara i Firebase: " + error.message);
 }
 }
-function removePerson(themeIndex, personId) {
+async function removePerson(themeIndex, personId) {
+  const person = peopleByTheme[themeIndex].find(person => person.id === personId);
+  if (!person) return;
+
+  if (person.firebaseKey) {
+    await set(ref(db, `pilotval/${person.firebaseKey}`), null);
+  }
+
   peopleByTheme[themeIndex] = peopleByTheme[themeIndex].filter(person => person.id !== personId);
+  renderPeople(themeIndex);
 }
   async function syncPersonToFirebase(themeIndex, person) {
   if (!person.firebaseKey) return;
