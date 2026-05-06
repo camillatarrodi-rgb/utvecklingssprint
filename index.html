@@ -387,7 +387,7 @@ try {
   console.error("Firebase-fel:", error);
   alert("Kunde inte spara i Firebase: " + error.message);
 }
-
+}
 function removePerson(themeIndex, personId) {
   peopleByTheme[themeIndex] = peopleByTheme[themeIndex].filter(person => person.id !== personId);
 }
