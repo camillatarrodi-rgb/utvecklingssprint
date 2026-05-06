@@ -378,7 +378,10 @@ async function savePerson(themeIndex) {
 person.firebaseKey = firebaseRef.key;
 await set(firebaseRef, person);
 
-    peopleByTheme[themeIndex].push(person);
+try {
+  const firebaseRef = push(ref(db, "pilotval"));
+  person.firebaseKey = firebaseRef.key;
+  await set(firebaseRef, person);
 
     nameInput.value = "";
     companyInput.value = "";
