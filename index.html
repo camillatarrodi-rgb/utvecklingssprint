@@ -770,10 +770,9 @@ createAllTags();
 
       try {
         const organisation = document.querySelector("#organisation")?.value || "";
-const name = document.querySelector("#name")?.value || "";
-const email = document.querySelector("#email")?.value || "";
-const role = document.querySelector("#role")?.value || "";
-const comment = document.querySelector("#comment")?.value || "";
+const name = document.querySelector("namn")?.value || "";
+const organisation = document.querySelector("organisation")?.value || "";
+const email  = document.querySelector("E-post")?.value || "";
 
 await push(ref(db, "pilotval"), {
   organisation,
