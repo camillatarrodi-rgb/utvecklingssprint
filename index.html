@@ -340,12 +340,6 @@ async function savePerson(themeIndex) {
   const companyInput = document.getElementById(`company-${themeIndex}`);
   const emailInput = document.getElementById(`email-${themeIndex}`);
 
-  if (!nameInput || !companyInput || !emailInput) {
-    console.error("Hittade inte fält för themeIndex:", themeIndex);
-    alert("Tekniskt fel: hittar inte formulärfälten.");
-    return;
-  }
-
   const name = nameInput.value.trim();
   const company = companyInput.value.trim();
   const email = emailInput.value.trim();
@@ -376,9 +370,9 @@ async function savePerson(themeIndex) {
   };
 
   try {
-    peopleByTheme[themeIndex].push(person);
-
     await push(ref(db, "pilotval"), person);
+
+    peopleByTheme[themeIndex].push(person);
 
     nameInput.value = "";
     companyInput.value = "";
@@ -388,11 +382,6 @@ async function savePerson(themeIndex) {
     renderPeople(themeIndex);
 
     alert("Anmälan sparad!");
-  } catch (error) {
-    console.error("Firebase-fel:", error);
-    alert("Kunde inte spara i Firebase: " + error.message);
-  }
-}
   } catch (error) {
     console.error("Firebase-fel:", error);
     alert("Kunde inte spara i Firebase: " + error.message);
@@ -542,9 +531,9 @@ function escapeHtml(text) {
     .replaceAll("'", "&#039;");
 }
 
-  const themeIndex = Number(button.dataset.themeIndex);
-  savePerson(themeIndex);
-});
+document.getElementById("addOtherSkillBtn").addEventListener("click", addOtherSkill);
+document.getElementById("printBtn").addEventListener("click", () => window.print());
+
 loadData();
 createThemes();
 createAllTags();
