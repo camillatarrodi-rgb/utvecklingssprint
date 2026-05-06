@@ -554,16 +554,30 @@ document.body.appendChild(liveBox);
 
 onValue(ref(db, "pilotval"), snapshot => {
   const data = snapshot.val();
-  const el = document.getElementById("liveData");
 
-  if (!data) {
-    el.textContent = "Inga anmälningar ännu.";
-    return;
+  peopleByTheme = flatThemes.map(() => []);
+
+  if (data) {
+    Object.values(data).forEach(person => {
+      const themeIndex = Number(person.themeIndex);
+
+      if (
+        Number.isInteger(themeIndex) &&
+        themeIndex >= 0 &&
+        themeIndex < peopleByTheme.length
+      ) {
+        peopleByTheme[themeIndex].push({
+          id: person.id || String(Date.now() + Math.random()),
+          name: person.name || "",
+          company: person.company || "",
+          email: person.email || "",
+          skills: person.skills || []
+        });
+      }
+    });
   }
 
-  el.textContent = Object.values(data)
-    .map(p => `${p.name} (${p.company}) – ${p.sprintTitle}`)
-    .join("\n");
+  flatThemes.forEach((_, index) => renderPeople(index));
 });
 </script>
 </body>
