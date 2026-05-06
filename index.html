@@ -280,7 +280,11 @@ function createThemes() {
         <div class="mailing-list" id="mailing-${themeIndex}"></div>
       `;
 
-      card.querySelector(".save-btn").addEventListener("click", () => savePerson(themeIndex));
+      const currentThemeIndex = themeIndex;
+
+card.querySelector(".save-btn").addEventListener("click", () => {
+  savePerson(currentThemeIndex);
+});
 
       grid.appendChild(card);
       themeIndex++;
