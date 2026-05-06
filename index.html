@@ -399,22 +399,48 @@ function removePerson(themeIndex, personId) {
   saveData();
   renderPeople(themeIndex);
 }
+  async function syncPersonToFirebase(themeIndex, person) {
+  if (!person.firebaseKey) return;
+
+  const selectedTheme = flatThemes[themeIndex];
+
+  await set(ref(db, `pilotval/${person.firebaseKey}`), {
+    ...person,
+    themeIndex,
+    sprintNumber: selectedTheme.number,
+    sprintTitle: selectedTheme.title,
+    category: selectedTheme.category,
+    updatedAt: new Date().toISOString()
+  });
+}
 
 function addSkillToPerson(themeIndex, personId, skill) {
   if (!skill) return;
+
   const person = peopleByTheme[themeIndex].find(person => person.id === personId);
   if (!person) return;
-  if (!person.skills.includes(skill)) person.skills.push(skill);
+
+  if (!person.skills.includes(skill)) {
+    person.skills.push(skill);
+    syncPersonToFirebase(themeIndex, person);
+  }
+
   selectedSkill = null;
   document.querySelectorAll(".tag").forEach(t => t.classList.remove("selected"));
+
   saveData();
   renderPeople(themeIndex);
+
 }
 
 function removeSkillFromPerson(themeIndex, personId, skill) {
   const person = peopleByTheme[themeIndex].find(person => person.id === personId);
   if (!person) return;
+
   person.skills = person.skills.filter(existingSkill => existingSkill !== skill);
+
+  syncPersonToFirebase(themeIndex, person);
+
   saveData();
   renderPeople(themeIndex);
 }
@@ -545,14 +571,6 @@ createThemes();
 createAllTags();
 
 
-const liveBox = document.createElement("div");
-liveBox.style.margin = "20px";
-liveBox.innerHTML = `
-  <h2>Inkomna anmälningar</h2>
-  <pre id="liveData"></pre>
-`;
-
-document.body.appendChild(liveBox);
 
 onValue(ref(db, "pilotval"), snapshot => {
   const data = snapshot.val();
@@ -568,17 +586,20 @@ onValue(ref(db, "pilotval"), snapshot => {
         themeIndex >= 0 &&
         themeIndex < peopleByTheme.length
       ) {
-peopleByTheme[themeIndex].push({
-  firebaseKey,
-  id: person.id || String(Date.now() + Math.random()),
-  name: person.name || "",
-  company: person.company || "",
-  email: person.email || "",
-  skills: person.skills || []
-});
+        peopleByTheme[themeIndex].push({
+          firebaseKey,
+          id: person.id || String(Date.now() + Math.random()),
+          name: person.name || "",
+          company: person.company || "",
+          email: person.email || "",
+          skills: person.skills || []
         });
       }
     });
+  }
+
+  flatThemes.forEach((_, index) => renderPeople(index));
+});
   }
 
   flatThemes.forEach((_, index) => renderPeople(index));
