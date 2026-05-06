@@ -228,9 +228,9 @@ let selectedSkill = null;
 function loadData() {
   const saved = localStorage.getItem(STORAGE_KEY);
   if (!saved) return;
+
   try {
     const parsed = JSON.parse(saved);
-    if (Array.isArray(parsed.peopleByTheme)) peopleByTheme = parsed.peopleByTheme;
     if (Array.isArray(parsed.customSkills)) customSkills = parsed.customSkills;
   } catch (error) {
     console.warn("Kunde inte läsa sparad data", error);
@@ -238,7 +238,7 @@ function loadData() {
 }
 
 function saveData() {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify({ peopleByTheme, customSkills }));
+  localStorage.setItem(STORAGE_KEY, JSON.stringify({ customSkills }));
 }
 
 function createThemes() {
@@ -373,34 +373,23 @@ async function savePerson(themeIndex) {
     time: new Date().toISOString()
   };
 
-  try {
-    const firebaseRef = push(ref(db, "pilotval"));
-person.firebaseKey = firebaseRef.key;
-await set(firebaseRef, person);
-
 try {
   const firebaseRef = push(ref(db, "pilotval"));
   person.firebaseKey = firebaseRef.key;
   await set(firebaseRef, person);
 
-    nameInput.value = "";
-    companyInput.value = "";
-    emailInput.value = "";
+  nameInput.value = "";
+  companyInput.value = "";
+  emailInput.value = "";
 
-    saveData();
-    renderPeople(themeIndex);
-
-    alert("Anmälan sparad!");
-  } catch (error) {
-    console.error("Firebase-fel:", error);
-    alert("Kunde inte spara i Firebase: " + error.message);
-  }
+  alert("Anmälan sparad!");
+} catch (error) {
+  console.error("Firebase-fel:", error);
+  alert("Kunde inte spara i Firebase: " + error.message);
 }
 
 function removePerson(themeIndex, personId) {
   peopleByTheme[themeIndex] = peopleByTheme[themeIndex].filter(person => person.id !== personId);
-  saveData();
-  renderPeople(themeIndex);
 }
   async function syncPersonToFirebase(themeIndex, person) {
   if (!person.firebaseKey) return;
@@ -432,7 +421,6 @@ function addSkillToPerson(themeIndex, personId, skill) {
   document.querySelectorAll(".tag").forEach(t => t.classList.remove("selected"));
 
   saveData();
-  renderPeople(themeIndex);
 
 }
 
@@ -445,7 +433,6 @@ function removeSkillFromPerson(themeIndex, personId, skill) {
   syncPersonToFirebase(themeIndex, person);
 
   saveData();
-  renderPeople(themeIndex);
 }
 
 function renderPeople(themeIndex) {
