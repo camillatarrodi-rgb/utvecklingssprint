@@ -125,7 +125,7 @@ button { border: 0; border-radius: 13px; padding: 9px 12px; font: inherit; font-
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
-import { getDatabase, ref, push, onValue } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-database.js";
+import { getDatabase, ref, push, set, onValue } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-database.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyCB-okFdEpQ58APMeLSrricPGgbUx3uOd0",
@@ -374,7 +374,9 @@ async function savePerson(themeIndex) {
   };
 
   try {
-    await push(ref(db, "pilotval"), person);
+    const firebaseRef = push(ref(db, "pilotval"));
+person.firebaseKey = firebaseRef.key;
+await set(firebaseRef, person);
 
     peopleByTheme[themeIndex].push(person);
 
@@ -558,7 +560,7 @@ onValue(ref(db, "pilotval"), snapshot => {
   peopleByTheme = flatThemes.map(() => []);
 
   if (data) {
-    Object.values(data).forEach(person => {
+    Object.entries(data).forEach(([firebaseKey, person]) => {
       const themeIndex = Number(person.themeIndex);
 
       if (
@@ -566,12 +568,14 @@ onValue(ref(db, "pilotval"), snapshot => {
         themeIndex >= 0 &&
         themeIndex < peopleByTheme.length
       ) {
-        peopleByTheme[themeIndex].push({
-          id: person.id || String(Date.now() + Math.random()),
-          name: person.name || "",
-          company: person.company || "",
-          email: person.email || "",
-          skills: person.skills || []
+peopleByTheme[themeIndex].push({
+  firebaseKey,
+  id: person.id || String(Date.now() + Math.random()),
+  name: person.name || "",
+  company: person.company || "",
+  email: person.email || "",
+  skills: person.skills || []
+});
         });
       }
     });
