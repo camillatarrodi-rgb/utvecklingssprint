@@ -732,5 +732,77 @@
     createThemes();
     createAllTags();
   </script>
+  <script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
+  import {
+    getFirestore,
+    collection,
+    addDoc,
+    onSnapshot,
+    query,
+    orderBy,
+    serverTimestamp
+  } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyCB-okFdEpQ58APMeLSrricPGgbUx3uOd0",
+    authDomain: "utvecklingssprintar.firebaseapp.com",
+    projectId: "utvecklingssprintar",
+    storageBucket: "utvecklingssprintar.firebasestorage.app",
+    messagingSenderId: "1040641301479",
+    appId: "1:1040641301479:web:c68b975c0417c14e57fb42"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+
+  // 🔹 SKICKA DATA
+  async function skickaPilotval() {
+    const payload = buildPayload();
+
+    await addDoc(collection(db, "pilotval"), {
+      ...payload,
+      createdAt: serverTimestamp()
+    });
+
+    toast("Sparat! 🎉");
+  }
+
+  // koppla till din befintliga knapp
+  const btn = document.querySelector("#downloadBtn");
+  btn.textContent = "Skicka pilotval";
+  btn.addEventListener("click", skickaPilotval);
+
+  // 🔹 VISA DATA LIVE
+  const liveDiv = document.createElement("div");
+  liveDiv.className = "summary";
+  liveDiv.innerHTML = `
+    <h4>Inkomna svar (live)</h4>
+    <div id="liveData" class="monoBox">Laddar...</div>
+  `;
+
+  document.querySelector(".aside").after(liveDiv);
+
+  const liveBox = document.querySelector("#liveData");
+
+  const q = query(collection(db, "pilotval"), orderBy("createdAt", "desc"));
+
+  onSnapshot(q, (snapshot) => {
+    const rows = [];
+
+    snapshot.forEach((doc) => {
+      const d = doc.data();
+
+      rows.push(
+        `${d.org || "—"}\n` +
+        `${d.contact?.name || ""} (${d.contact?.email || ""})\n` +
+        `Val: ${(d.picks || []).map(p => p.title).join(", ")}\n` +
+        `---`
+      );
+    });
+
+    liveBox.textContent = rows.join("\n\n") || "Inga svar ännu.";
+  });
+</script>
 </body>
 </html>
