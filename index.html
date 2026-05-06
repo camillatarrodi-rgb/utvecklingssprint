@@ -752,20 +752,35 @@ createAllTags();
     appId: "1:1040641301479:web:c68b975c0417c14e57fb42"
   };
 
+  console.log("Firebase-script laddat");
+
   const app = initializeApp(firebaseConfig);
   const db = getDatabase(app);
 
-  async function skickaPilotval() {
-    await push(ref(db, "test"), {
-      test: "funkar!",
-      time: Date.now()
+  const button = document.querySelector("#downloadBtn");
+
+  console.log("Knapp hittad:", button);
+
+  if (button) {
+    button.textContent = "Spara anmälan";
+
+    button.addEventListener("click", async () => {
+      console.log("Knappen klickades");
+
+      try {
+        await push(ref(db, "test"), {
+          message: "Det funkar",
+          time: new Date().toISOString()
+        });
+
+        console.log("Sparat i Firebase");
+        alert("Sparat i Firebase!");
+      } catch (error) {
+        console.error("Firebase-fel:", error);
+        alert("Fel: " + error.message);
+      }
     });
-
-    alert("Nu sparades det!");
   }
-
-  document.querySelector("#downloadBtn")
-    .addEventListener("click", skickaPilotval);
 </script>
 </body>
 </html>
