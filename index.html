@@ -1,10 +1,131 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Designteknologier: Utvecklingssprintar vt 2026</title>
+<style>
+:root {
+--text: #17212b;
+--muted: #667085;
+--white: rgba(255,255,255,0.92);
+--glass: rgba(255,255,255,0.78);
+--border: rgba(255,255,255,0.55);
+--pink-bg: #fde7f1;
+--pink-text: #c21872;
+--yellow-bg: #fff2b8;
+--orange-text: #d76600;
+--green: #2f6f5e;
+--green-soft: #e1f0ea;
+--danger: #a33a3a;
+--danger-soft: #f8dddd;
+--shadow: 0 16px 38px rgba(0,0,0,0.18);
+}
+* { box-sizing: border-box; }
+body {
+margin: 0;
+font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+color: var(--text);
+background: linear-gradient(rgba(10,20,25,0.36), rgba(10,20,25,0.58)), url("bakgrund.png") center/cover fixed no-repeat;
+min-height: 100vh;
+line-height: 1.45;
+}
+header { padding: 46px 20px 24px; text-align: center; color: white; text-shadow: 0 2px 16px rgba(0,0,0,0.35); }
+h1 { margin: 0 0 10px; font-size: clamp(2.1rem, 5vw, 4rem); letter-spacing: -0.045em; }
+.intro { max-width: 850px; margin: 0 auto; font-size: 1.08rem; }
+main { max-width: 1280px; margin: 0 auto; padding: 20px; }
+.layout { display: grid; grid-template-columns: minmax(0, 1fr) 360px; gap: 22px; align-items: start; }
+.category { margin-bottom: 28px; }
+.category-title { margin: 0 0 14px; padding: 14px 18px; border-radius: 22px; font-size: 1.55rem; box-shadow: var(--shadow); }
+.category-title.early { background: var(--pink-bg); color: var(--pink-text); }
+.category-title.reuse { background: var(--yellow-bg); color: var(--orange-text); }
+.themes { display: grid; grid-template-columns: repeat(auto-fit, minmax(295px, 1fr)); gap: 18px; }
+.theme-card, .skills-panel, .toolbar { border: 1px solid var(--border); border-radius: 26px; box-shadow: var(--shadow); backdrop-filter: blur(9px); }
+.theme-card { padding: 18px; min-height: 390px; }
+.theme-card.early { background: rgba(253,231,241,0.94); color: var(--pink-text); }
+.theme-card.reuse { background: rgba(255,242,184,0.96); color: var(--orange-text); }
+.theme-number { display: inline-flex; align-items: center; justify-content: center; width: 42px; height: 42px; margin-bottom: 8px; border-radius: 999px; background: rgba(255,255,255,0.78); font-weight: 900; font-size: 1rem; border: 1px solid rgba(0,0,0,0.08); }
+.theme-card h3 { margin: 0 0 8px; font-size: 1.16rem; line-height: 1.18; }
+.theme-subtitle { margin: 0 0 14px; font-size: 0.86rem; color: #5f6875; }
+.theme-card.early .theme-subtitle { color: #805169; }
+.theme-card.reuse .theme-subtitle { color: #7b5a12; }
+label { display: block; margin-top: 9px; font-weight: 750; font-size: 0.88rem; }
+input[type="text"] { width: 100%; margin-top: 5px; padding: 10px 11px; border: 1px solid rgba(0,0,0,0.15); border-radius: 13px; font: inherit; background: rgba(255,255,255,0.88); color: var(--text); }
+button { border: 0; border-radius: 13px; padding: 9px 12px; font: inherit; font-weight: 800; cursor: pointer; }
+.save-btn { width: 100%; margin-top: 12px; background: rgba(255,255,255,0.82); color: inherit; border: 1px solid rgba(0,0,0,0.12); }
+.save-btn:hover, .tag:hover, .tool-btn:hover { transform: translateY(-1px); }
+.people-list { list-style: none; padding: 0; margin: 14px 0 0; display: grid; gap: 10px; }
+.empty-hint { color: rgba(0,0,0,0.58); font-size: 0.86rem; margin-top: 8px; }
+.person { border: 1px dashed rgba(0,0,0,0.22); border-radius: 18px; padding: 12px; background: rgba(255,255,255,0.68); min-height: 96px; transition: 0.15s ease; }
+.person.drag-over { outline: 4px solid rgba(47,111,94,0.24); background: var(--green-soft); transform: scale(1.01); }
+.person-top { display: flex; justify-content: space-between; align-items: start; gap: 10px; }
+.person-name { font-weight: 900; color: var(--text); }
+.person-company { color: rgba(0,0,0,0.62); font-size: 0.9rem; }
+.remove-btn { background: var(--danger-soft); color: var(--danger); padding: 6px 9px; font-size: 0.82rem; white-space: nowrap; }
+.person-skills { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; min-height: 30px; }
+.assigned-skill { display: inline-flex; gap: 5px; align-items: center; border-radius: 999px; background: white; color: var(--green); padding: 5px 8px; font-size: 0.8rem; font-weight: 800; border: 1px solid rgba(0,0,0,0.12); }
+.assigned-skill button { background: transparent; color: inherit; padding: 0 2px; line-height: 1; font-weight: 900; }
+.skills-panel { position: sticky; top: 16px; padding: 18px; background: var(--glass); }
+.skills-panel h2 { margin: 0 0 6px; }
+.skills-panel p { margin: 0 0 14px; color: var(--muted); font-size: 0.94rem; }
+.skill-group { margin-top: 18px; }
+.skill-group h3 { margin: 0 0 10px; color: var(--green); font-size: 1rem; }
+.tags { display: flex; flex-wrap: wrap; gap: 8px; }
+.tag { display: inline-flex; align-items: center; border: 1px solid rgba(0,0,0,0.14); border-radius: 999px; background: white; padding: 8px 10px; font-size: 0.88rem; cursor: grab; user-select: none; transition: 0.15s ease; }
+.tag.selected { outline: 4px solid rgba(47,111,94,0.22); border-color: var(--green); color: var(--green); font-weight: 900; }
+.other-row { display: grid; gap: 8px; }
+.toolbar { margin-top: 18px; padding: 12px; background: rgba(255,255,255,0.72); display: grid; gap: 8px; }
+.tool-btn { background: #ebe8e1; color: var(--text); }
+.mailing-list { margin-top: 12px; padding-top: 10px; border-top: 1px solid rgba(0,0,0,0.12); font-size: 0.84rem; }
+.mailing-title { font-weight: 900; color: rgba(0,0,0,0.66); margin-bottom: 4px; }
+.mailing-link { color: inherit; word-break: break-word; }
+.clear-btn { background: var(--danger-soft); color: var(--danger); }
+@media (max-width: 980px) { .layout { grid-template-columns: 1fr; } .skills-panel { position: static; } }
+@media print { body { background: white; } header { color: #111; text-shadow: none; } .skills-panel, .save-btn, .remove-btn, .assigned-skill button { display: none; } .layout { display: block; } .theme-card, .category-title { break-inside: avoid; box-shadow: none; margin-bottom: 14px; } }
+</style>
+</head>
+<body>
+<header>
+<h1>Designteknologier: Utvecklingssprintar vt 2026</h1>
+<p class="intro">Anmäl dig till 1–2 sprintar och dra sedan kompetenstaggar till ditt namn (för att kartlägga vilka kunskapsresurser gruppen har). Anmälan sparas i Firebase.</p>
+</header>
+
+<main>
+<div class="layout">
+<section id="theme-area" aria-label="Teman"></section>
+
+<aside class="skills-panel" aria-label="Kompetenser">
+<h2>Kompetenstaggar</h2>
+<p>Dra en tagg till en person. Det går också att klicka på en tagg och sedan klicka på personen.</p>
+
+<div class="skill-group">
+<h3>Kompetenser</h3>
+<div class="tags" id="competence-tags"></div>
+</div>
+
+<div class="skill-group">
+<h3>Designteknologier</h3>
+<div class="tags" id="tech-tags"></div>
+</div>
+
+<div class="skill-group">
+<h3>Annan kompetens eller programvara</h3>
+<div class="other-row">
+<input id="other-skill" type="text" placeholder="Skriv egen tagg" />
+<button class="tool-btn" type="button" id="addOtherSkillBtn">Lägg till tagg</button>
+</div>
+</div>
+
+<div class="toolbar">
+<button class="tool-btn" type="button" id="printBtn">Skriv ut / spara som PDF</button>
+</div>
+</aside>
+</div>
+</main>
+
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
-import {
-  getDatabase,
-  ref,
-  push
-} from "https://www.gstatic.com/firebasejs/10.12.5/firebase-database.js";
+import { getDatabase, ref, push } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-database.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyCB-okFdEpQ58APMeLSrricPGgbUx3uOd0",
@@ -22,131 +143,400 @@ const db = getDatabase(app);
 const STORAGE_KEY = "tema-kompetens-data-v3";
 
 const categories = [
-{
-title: "Tidiga skeden",
-className: "early",
-prefix: "1",
-themes: [
-{
-title: "AI agenter för automatisk inhämtning av data",
-desc: "Hur kan vi med hjälp av AI agenter..."
-},
-{
-title: "Automatiserad granskning av lagar...",
-desc: "Hur kan vi automatisera granskning..."
-},
-{
-title: "Tidig fastighetsekonomisk jämförelse",
-desc: "Hur kan vi uppskatta..."
-}
-]
-},
-{
-title: "Återbruk",
-className: "reuse",
-prefix: "2",
-themes: [
-{
-title: "Parallell design med och utan återbruk",
-desc: "Hur kan vi snabbt jämföra..."
-},
-{
-title: "Behålla flexibilitet...",
-desc: "Hur kan vi arbeta..."
-},
-{
-title: "Matchning mellan design...",
-desc: "Hur kan vi matcha..."
-}
-]
-}
+  {
+    title: "Tidiga skeden",
+    className: "early",
+    prefix: "1",
+    themes: [
+      {
+        title: "AI agenter för automatisk inhämtning av data",
+        desc: "Hur kan vi med hjälp av AI agenter på ett effektivt sätt samla in underlag såsom DP-karta, fastighetsvärden över tid, buller, luftkvalitet, trafikflöden osv..."
+      },
+      {
+        title: "Automatiserad granskning av lagar, regler och styrdokument",
+        desc: "Hur kan vi automatisera granskning av handlingar i tidiga skeden?"
+      },
+      {
+        title: "Tidig fastighetsekonomisk jämförelse",
+        desc: "Hur kan vi uppskatta och jämföra fastighetsekonomiska konsekvenser för 2–3 designalternativ i tidiga skeden så att val av huvudkoncept kan göras på mer informerad grund?"
+      }
+    ]
+  },
+  {
+    title: "Återbruk",
+    className: "reuse",
+    prefix: "2",
+    themes: [
+      {
+        title: "Parallell design med och utan återbruk",
+        desc: "Hur kan vi snabbt jämföra ett designförslag med och utan återbruk i tidiga skeden så att konsekvenser för kostnad, klimat och gestaltning blir tydliga?"
+      },
+      {
+        title: "Behålla flexibilitet genom designprocess och projektering",
+        desc: "Hur kan vi arbeta med skarpa designförslag och samtidigt behålla flexibilitet i måttsättning, material och val av produkt för att möjliggöra anpassning i senare skede?"
+      },
+      {
+        title: "Matchning mellan design och tillgängligt återbruksmaterial",
+        desc: "Hur kan vi matcha ett tidigt designförslag med tillgängliga återbruksmaterial så att arkitekten kan testa vad som är möjligt utan att låsa lösningen?"
+      }
+    ]
+  }
+];
+
+const baseSkills = [
+  "Klimatberäkning/LCA",
+  "Affärsmodeller",
+  "Parametrisk design",
+  "Tidiga skeden",
+  "Vibe coding",
+  "BIM"
+];
+
+const designTechnologies = [
+  "Revit",
+  "Rhino",
+  "Grasshopper",
+  "Dynamo",
+  "SketchUp",
+  "Archicad",
+  "AutoCAD",
+  "Navisworks",
+  "Solibri",
+  "Speckle",
+  "Ladybug Tools",
+  "One Click LCA",
+  "Figma",
+  "Power BI",
+  "Excel",
+  "Visual Studio Code",
+  "GitHub"
 ];
 
 const flatThemes = categories.flatMap(category =>
-category.themes.map((theme, index) => ({
-...theme,
-category: category.title,
-className: category.className,
-number: `${category.prefix}${String.fromCharCode(97 + index)}`
-}))
+  category.themes.map((theme, index) => ({
+    ...theme,
+    category: category.title,
+    className: category.className,
+    number: `${category.prefix}${String.fromCharCode(97 + index)}`
+  }))
 );
 
 let peopleByTheme = flatThemes.map(() => []);
-
-function saveData() {
-localStorage.setItem(STORAGE_KEY, JSON.stringify({ peopleByTheme }));
-}
+let customSkills = [];
+let selectedSkill = null;
 
 function loadData() {
-const saved = localStorage.getItem(STORAGE_KEY);
-if (!saved) return;
-const parsed = JSON.parse(saved);
-if (parsed.peopleByTheme) peopleByTheme = parsed.peopleByTheme;
+  const saved = localStorage.getItem(STORAGE_KEY);
+  if (!saved) return;
+  try {
+    const parsed = JSON.parse(saved);
+    if (Array.isArray(parsed.peopleByTheme)) peopleByTheme = parsed.peopleByTheme;
+    if (Array.isArray(parsed.customSkills)) customSkills = parsed.customSkills;
+  } catch (error) {
+    console.warn("Kunde inte läsa sparad data", error);
+  }
+}
+
+function saveData() {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify({ peopleByTheme, customSkills }));
 }
 
 function createThemes() {
-const area = document.getElementById("theme-area");
-area.innerHTML = "";
+  const area = document.getElementById("theme-area");
+  area.innerHTML = "";
+  let themeIndex = 0;
 
-flatThemes.forEach((theme, i) => {
-const card = document.createElement("div");
+  categories.forEach(category => {
+    const section = document.createElement("section");
+    section.className = "category";
 
-card.innerHTML = `
-<h3>${theme.number} ${theme.title}</h3>
-<input id="name-${i}" placeholder="Namn">
-<input id="company-${i}" placeholder="Företag">
-<input id="email-${i}" placeholder="E-post">
-<button onclick="savePerson(${i})">Spara anmälan</button>
-<ul id="list-${i}"></ul>
-`;
+    const heading = document.createElement("h2");
+    heading.className = `category-title ${category.className}`;
+    heading.textContent = category.title;
+    section.appendChild(heading);
 
-area.appendChild(card);
+    const grid = document.createElement("div");
+    grid.className = "themes";
 
-renderPeople(i);
-});
+    category.themes.forEach((theme, localIndex) => {
+      const number = `${category.prefix}${String.fromCharCode(97 + localIndex)}`;
+      const card = document.createElement("article");
+      card.className = `theme-card ${category.className}`;
+      card.innerHTML = `
+        <div class="theme-number">${number}</div>
+        <h3>${escapeHtml(theme.title)}</h3>
+        <p class="theme-subtitle">${escapeHtml(theme.desc)}</p>
+        <label>Namn
+          <input type="text" id="name-${themeIndex}" placeholder="Ex. Anna Andersson" />
+        </label>
+        <label>Företag
+          <input type="text" id="company-${themeIndex}" placeholder="Ex. Arkitektkontoret AB" />
+        </label>
+        <label>E-post
+          <input type="text" id="email-${themeIndex}" placeholder="Ex. anna@foretag.se" />
+        </label>
+        <button class="save-btn" type="button" data-theme-index="${themeIndex}">Spara anmälan</button>
+        <ul class="people-list" id="list-${themeIndex}"></ul>
+        <div class="mailing-list" id="mailing-${themeIndex}"></div>
+      `;
+
+      card.querySelector(".save-btn").addEventListener("click", () => savePerson(themeIndex));
+
+      grid.appendChild(card);
+      themeIndex++;
+    });
+
+    section.appendChild(grid);
+    area.appendChild(section);
+  });
+
+  flatThemes.forEach((_, index) => renderPeople(index));
 }
 
-window.savePerson = async function(themeIndex) {
-const name = document.getElementById(`name-${themeIndex}`).value;
-const company = document.getElementById(`company-${themeIndex}`).value;
-const email = document.getElementById(`email-${themeIndex}`).value;
-
-if (!name || !email) {
-alert("Fyll i namn och e-post");
-return;
+function createAllTags() {
+  renderTagList("competence-tags", baseSkills);
+  renderTagList("tech-tags", [...designTechnologies, ...customSkills]);
 }
 
-const theme = flatThemes[themeIndex];
-
-const person = {
-name,
-company,
-email,
-theme: theme.title,
-time: new Date().toISOString()
-};
-
-peopleByTheme[themeIndex].push(person);
-
-await push(ref(db, "pilotval"), person);
-
-saveData();
-renderPeople(themeIndex);
-
-alert("Sparat!");
-};
-
-function renderPeople(index) {
-const list = document.getElementById(`list-${index}`);
-list.innerHTML = "";
-
-peopleByTheme[index].forEach(p => {
-const li = document.createElement("li");
-li.textContent = `${p.name} (${p.company})`;
-list.appendChild(li);
-});
+function renderTagList(containerId, skills) {
+  const container = document.getElementById(containerId);
+  container.innerHTML = "";
+  skills.forEach(skill => container.appendChild(makeTag(skill)));
 }
+
+function makeTag(skill) {
+  const tag = document.createElement("span");
+  tag.className = "tag";
+  tag.textContent = skill;
+  tag.draggable = true;
+  tag.dataset.skill = skill;
+
+  tag.addEventListener("dragstart", event => {
+    event.dataTransfer.setData("text/plain", skill);
+  });
+
+  tag.addEventListener("click", () => {
+    selectedSkill = skill;
+    document.querySelectorAll(".tag").forEach(t => t.classList.remove("selected"));
+    tag.classList.add("selected");
+  });
+
+  return tag;
+}
+
+function addOtherSkill() {
+  const input = document.getElementById("other-skill");
+  const skill = input.value.trim();
+  if (!skill) return;
+  const allSkills = [...baseSkills, ...designTechnologies, ...customSkills];
+  if (!allSkills.includes(skill)) customSkills.push(skill);
+  input.value = "";
+  saveData();
+  createAllTags();
+}
+
+async function savePerson(themeIndex) {
+  const nameInput = document.getElementById(`name-${themeIndex}`);
+  const companyInput = document.getElementById(`company-${themeIndex}`);
+  const emailInput = document.getElementById(`email-${themeIndex}`);
+
+  const name = nameInput.value.trim();
+  const company = companyInput.value.trim();
+  const email = emailInput.value.trim();
+
+  if (!name) {
+    alert("Skriv in namn innan du sparar.");
+    return;
+  }
+
+  if (!email) {
+    alert("Skriv in e-post innan du sparar.");
+    return;
+  }
+
+  const selectedTheme = flatThemes[themeIndex];
+
+  const person = {
+    id: crypto.randomUUID ? crypto.randomUUID() : String(Date.now() + Math.random()),
+    name,
+    company,
+    email,
+    skills: [],
+    themeIndex,
+    sprintNumber: selectedTheme.number,
+    sprintTitle: selectedTheme.title,
+    category: selectedTheme.category,
+    time: new Date().toISOString()
+  };
+
+  try {
+    await push(ref(db, "pilotval"), person);
+
+    peopleByTheme[themeIndex].push(person);
+
+    nameInput.value = "";
+    companyInput.value = "";
+    emailInput.value = "";
+
+    saveData();
+    renderPeople(themeIndex);
+
+    alert("Anmälan sparad!");
+  } catch (error) {
+    console.error("Firebase-fel:", error);
+    alert("Kunde inte spara i Firebase: " + error.message);
+  }
+}
+
+function removePerson(themeIndex, personId) {
+  peopleByTheme[themeIndex] = peopleByTheme[themeIndex].filter(person => person.id !== personId);
+  saveData();
+  renderPeople(themeIndex);
+}
+
+function addSkillToPerson(themeIndex, personId, skill) {
+  if (!skill) return;
+  const person = peopleByTheme[themeIndex].find(person => person.id === personId);
+  if (!person) return;
+  if (!person.skills.includes(skill)) person.skills.push(skill);
+  selectedSkill = null;
+  document.querySelectorAll(".tag").forEach(t => t.classList.remove("selected"));
+  saveData();
+  renderPeople(themeIndex);
+}
+
+function removeSkillFromPerson(themeIndex, personId, skill) {
+  const person = peopleByTheme[themeIndex].find(person => person.id === personId);
+  if (!person) return;
+  person.skills = person.skills.filter(existingSkill => existingSkill !== skill);
+  saveData();
+  renderPeople(themeIndex);
+}
+
+function renderPeople(themeIndex) {
+  const list = document.getElementById(`list-${themeIndex}`);
+  if (!list) return;
+  list.innerHTML = "";
+
+  if (!peopleByTheme[themeIndex] || peopleByTheme[themeIndex].length === 0) {
+    const empty = document.createElement("li");
+    empty.className = "empty-hint";
+    empty.textContent = "Ingen anmäld ännu.";
+    list.appendChild(empty);
+    renderMailingList(themeIndex);
+    return;
+  }
+
+  peopleByTheme[themeIndex].forEach(person => {
+    const li = document.createElement("li");
+    li.className = "person";
+
+    li.addEventListener("dragover", event => {
+      event.preventDefault();
+      li.classList.add("drag-over");
+    });
+
+    li.addEventListener("dragleave", () => li.classList.remove("drag-over"));
+
+    li.addEventListener("drop", event => {
+      event.preventDefault();
+      li.classList.remove("drag-over");
+      addSkillToPerson(themeIndex, person.id, event.dataTransfer.getData("text/plain"));
+    });
+
+    li.addEventListener("click", () => {
+      if (selectedSkill) addSkillToPerson(themeIndex, person.id, selectedSkill);
+    });
+
+    const top = document.createElement("div");
+    top.className = "person-top";
+    top.innerHTML = `
+      <div>
+        <div class="person-name">${escapeHtml(person.name)}</div>
+        <div class="person-company">${escapeHtml(person.company || "Företag ej angivet")}</div>
+        <div class="person-company">${person.email ? `<a href="mailto:${escapeHtml(person.email)}">${escapeHtml(person.email)}</a>` : "E-post saknas"}</div>
+      </div>
+      <button class="remove-btn" type="button">Ta bort</button>
+    `;
+
+    top.querySelector("button").addEventListener("click", event => {
+      event.stopPropagation();
+      removePerson(themeIndex, person.id);
+    });
+
+    const skills = document.createElement("div");
+    skills.className = "person-skills";
+
+    if (!person.skills || person.skills.length === 0) {
+      const hint = document.createElement("span");
+      hint.className = "empty-hint";
+      hint.textContent = "Dra kompetenser hit.";
+      skills.appendChild(hint);
+    } else {
+      person.skills.forEach(skill => {
+        const skillEl = document.createElement("span");
+        skillEl.className = "assigned-skill";
+        skillEl.innerHTML = `${escapeHtml(skill)} <button type="button" aria-label="Ta bort kompetens">×</button>`;
+        skillEl.querySelector("button").addEventListener("click", event => {
+          event.stopPropagation();
+          removeSkillFromPerson(themeIndex, person.id, skill);
+        });
+        skills.appendChild(skillEl);
+      });
+    }
+
+    li.appendChild(top);
+    li.appendChild(skills);
+    list.appendChild(li);
+  });
+
+  renderMailingList(themeIndex);
+}
+
+function renderMailingList(themeIndex) {
+  const box = document.getElementById(`mailing-${themeIndex}`);
+  if (!box) return;
+
+  const emails = (peopleByTheme[themeIndex] || [])
+    .map(person => person.email)
+    .filter(Boolean);
+
+  if (emails.length === 0) {
+    box.innerHTML = "";
+    return;
+  }
+
+  const mailto = `mailto:${emails.join(",")}`;
+  box.innerHTML = `
+    <div class="mailing-title">Mailinglista</div>
+    <a class="mailing-link" href="${mailto}">${emails.join(", ")}</a>
+  `;
+}
+
+function clearAllData() {
+  if (!confirm("Vill du rensa alla anmälningar och egna taggar i denna webbläsare?")) return;
+  peopleByTheme = flatThemes.map(() => []);
+  customSkills = [];
+  localStorage.removeItem(STORAGE_KEY);
+  createAllTags();
+  flatThemes.forEach((_, index) => renderPeople(index));
+}
+
+function escapeHtml(text) {
+  return String(text)
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#039;");
+}
+
+document.getElementById("addOtherSkillBtn").addEventListener("click", addOtherSkill);
+document.getElementById("printBtn").addEventListener("click", () => window.print());
 
 loadData();
 createThemes();
+createAllTags();
 </script>
+</body>
+</html>
