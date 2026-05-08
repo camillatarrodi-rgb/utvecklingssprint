@@ -670,7 +670,7 @@ onValue(ref(db, "pilotval"), snapshot => {
 
   flatThemes.forEach((_, index) => renderPeople(index));
 });
-  const chatSendBtn = document.getElementById("chatSendBtn");
+const chatSendBtn = document.getElementById("chatSendBtn");
 
 chatSendBtn.addEventListener("click", async () => {
   const nameInput = document.getElementById("chatName");
@@ -709,12 +709,10 @@ onValue(ref(db, "chat"), snapshot => {
     .forEach(item => {
       const div = document.createElement("div");
       div.className = "chat-message";
-
       div.innerHTML = `
         <strong>${escapeHtml(item.name || "Anonym")}</strong>
         <div>${escapeHtml(item.message || "")}</div>
       `;
-
       container.appendChild(div);
     });
 });
