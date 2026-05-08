@@ -175,7 +175,13 @@ button { border: 0; border-radius: 13px; padding: 9px 12px; font: inherit; font-
 
 <section class="chat-panel">
   <h2>Frågor och inspel</h2>
-  ...
+  <p>Skriv en fråga, kommentar eller idé kopplad till sprintarna.</p>
+
+  <input id="chatName" type="text" placeholder="Ditt namn" />
+  <textarea id="chatMessage" placeholder="Skriv din fråga eller ditt inspel"></textarea>
+  <button id="chatSendBtn" type="button">Skicka</button>
+
+  <div id="chatMessages" class="chat-messages"></div>
 </section>
 
 </main>
